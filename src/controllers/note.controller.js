@@ -9,7 +9,7 @@ const home = async (req, res) => {
 }
 
 
-// 1. POST Single Note (/api/note)
+
 const createNote = async (req, res) => {
     try {
         const { title, content, category, isPinned } = req.body;
@@ -27,7 +27,7 @@ const createNote = async (req, res) => {
     }
 }
 
-// 2. POST Multiple Notes (/api/notes/bulk)
+
 const bulkNotes = async (req, res) => {
     try {
         const { notes } = req.body;
@@ -43,7 +43,8 @@ const bulkNotes = async (req, res) => {
     }
 };
 
-// GET Get all Notes (/api/notes)
+
+
 const getNotes = async (req, res) => {
     try {
         const data = await Notes.find();
@@ -56,4 +57,30 @@ const getNotes = async (req, res) => {
 }
 
 
-module.exports = { createNote, bulkNotes, getNotes };
+
+const getNotesID = async (req, res) => {
+    try {
+        const noteId = sanitizeId(req.params.id);
+
+        if (!isValidObjectId(noteId)) {
+            return res.status(400).json({ message: "Invalid note id" })
+        }
+
+        const Note = await Notes.findById(noteId);
+
+        if (!Note) {
+            res.status(404).json({ message: "User Not Found Enter valid ID", err: err.message })
+        }
+
+        res.status(200).json({
+            message: "Note fetched Successfully",
+            note: Note
+        });
+    }
+    catch (err) {
+        res.status(500).json({ message: "Server Error", err: err.message })
+    }
+}
+
+
+module.exports = { createNote, bulkNotes, getNotes, getNotesID};

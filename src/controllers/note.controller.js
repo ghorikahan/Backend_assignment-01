@@ -43,5 +43,17 @@ const bulkNotes = async (req, res) => {
     }
 };
 
+// GET Get all Notes (/api/notes)
+const getNotes = async (req, res) => {
+    try {
+        const data = await Notes.find();
 
-module.exports = { createNote, bulkNotes };
+        res.status(200).json(data)
+    }
+    catch (err) {
+        res.status(500).json({ message: "Server Error", err: err.message })
+    }
+}
+
+
+module.exports = { createNote, bulkNotes, getNotes };

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createNote, bulkNotes, getNotes,getNotesID,replaceNote,replacePart,deleteBulkbyID } = require("../controllers/note.controller");
+const { createNote, bulkNotes, getNotes,getNotesID,replaceNote,replacePart,deleteBulkbyID,deletebyID } = require("../controllers/note.controller");
 
 router.post("/api/notes", createNote);
 router.post("/api/notes/bulk", bulkNotes);
@@ -13,6 +13,7 @@ router.put("/api/notes/:id",replaceNote);
 router.patch("/api/notes/:id",replacePart);
 
 router.delete("/api/notes/bulk",deleteBulkbyID);
+router.delete("/api/notes/:id",deletebyID);
 
 
 module.exports = router;

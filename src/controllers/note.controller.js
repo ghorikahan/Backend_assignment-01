@@ -165,4 +165,27 @@ const deleteBulkbyID = async (req, res) => {
     }
 }
 
-module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote, replacePart,deleteBulkbyID };
+const deletebyID = async (req, res) => {
+    try {
+        const noteID = sanitizeId(req.params.id);
+
+        if (!isValidObjectId(noteID)) {
+            return res.status(400).json({ message: "Invalid note id" })
+        }
+
+        const deleteUser = await Notes.findByIdAndDelete(noteID);
+
+        if (!deleteUser) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+        res.status(200).json({ message: "User deleted Successfully" })
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Server Error",
+            err: err.message
+        });
+    }
+}
+
+module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote, replacePart,deleteBulkbyID, deletebyID};

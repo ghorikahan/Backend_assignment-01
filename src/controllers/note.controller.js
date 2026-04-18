@@ -132,4 +132,37 @@ const replacePart = async (req, res) => {
     }
 }
 
-module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote, replacePart };
+const deleteBulkbyID = async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                message: "ids must be a non-empty array"
+            });
+        }
+
+        const sanitizedIds = ids.map(sanitizeId)
+
+        if (!sanitizedIds.every(isValidObjectId)) {
+            return res.status(400).json({ message: "One or more ids are invalid" })
+        }
+
+        const deleteUser = await Notes.deleteMany({
+            _id: { $in: sanitizedIds }
+        })
+
+        res.status(200).json({
+            message: "Users deleted Successfully",
+            deletedCount: deleteUser.deletedCount
+        })
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Server Error",
+            err: err.message
+        });
+    }
+}
+
+module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote, replacePart,deleteBulkbyID };

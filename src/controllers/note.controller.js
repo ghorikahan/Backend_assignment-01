@@ -105,5 +105,31 @@ const replaceNote = async (req, res) => {
     }
 }
 
+const replacePart = async (req, res) => {
+    try {
+        const noteID = sanitizeId(req.params.id);
 
-module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote};
+        if (!isValidObjectId(noteID)) {
+            return res.status(400).json({ message: "Invalid note id" })
+        }
+
+        const updateNote = await Notes.findByIdAndUpdate(
+            noteID,
+            { $set: req.body }
+        )
+
+        if (!updateNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        res.status(200).json({
+            message: "Note updated",
+            user: updateNote
+        });
+    }
+    catch (err) {
+        res.status(500).json({ message: "Server side Error", err: err.message })
+    }
+}
+
+module.exports = { createNote, bulkNotes, getNotes, getNotesID, replaceNote, replacePart };

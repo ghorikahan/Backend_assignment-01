@@ -7,6 +7,7 @@ const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id)
 const home = async (req,res) => {
     res.status(200).json({message : "Hello Welcome!"})
 }
+ 
 
 // 1. POST Single Note (/api/note)
 const createNote = async (req, res) => {
